@@ -7,7 +7,6 @@ typedef struct node {		// 구조체 node 선언
 	struct node *right;		// 구조체 node에 대한 포인터 right
 } Node;						// 구조체 node를 Node로 정의
 
-/* for stack */
 #define MAX_STACK_SIZE 20
 Node* stack[MAX_STACK_SIZE];	// Node에 대한 MAX_STACK_SIZE 크기 만큼의 포인터 배열 stack	
 int top = -1;					// stack에 사용할 top -1로 초기화
@@ -15,7 +14,6 @@ int top = -1;					// stack에 사용할 top -1로 초기화
 Node* pop();					// stack의 pop 기능
 void push(Node* aNode);			// stack의 push 기능
 
-/* for queue */
 #define MAX_QUEUE_SIZE 20
 Node* queue[MAX_QUEUE_SIZE];	// Node에 대한 MAX_QUEUE_SIZE 크기 만큼의 포인터 배열 queue
 int front = -1;					// queue에 사용할 front -1로 초기화
@@ -25,21 +23,23 @@ Node* deQueue();			// queue의 deQueue 기능
 void enQueue(Node* aNode);	// queue의 enQueue 기능
 
 
-int initializeBST(Node** h);
+int initializeBST(Node** h); // 이진트리 초기화 
 
-/* functions that you have to implement */
-void recursiveInorder(Node* ptr);	  /* recursive inorder traversal */
-void iterativeInorder(Node* ptr);     /* iterative inorder traversal */
-void levelOrder(Node* ptr);	          /* level order traversal */
-int insert(Node* head, int key);      /* insert a node to the tree */
-int deleteNode(Node* head, int key);  /* delete the node for the key */
-int freeBST(Node* head); /* free all memories allocated to the tree */
+void recursiveInorder(Node* ptr);	  // recursive 방식으로 중위 순회
+void iterativeInorder(Node* ptr);     // iterative 방식으로 중위 순회
+void levelOrder(Node* ptr);	          // level order 순회
+int insert(Node* head, int key);      // 이진트리에 입력받은 key를 지닌 노드 삽입
+int deleteNode(Node* head, int key);  // 입력받은 key를 지닌 노드 삭제
+int freeBST(Node* head); // 트리 해제
 
 int main()
 {
 	char command;
 	int key;
 	Node* head = NULL;
+	int flag = 0;	// 트리를 초기화 했는지 판단할 변수
+
+	printf("[-------------------- [복무창] [2021040021] --------------------]");
 
 	do{
 		printf("\n\n");
@@ -58,11 +58,17 @@ int main()
 		switch(command) {
 		case 'z': case 'Z':
 			initializeBST(&head);
+			flag=1;
 			break;
 		case 'q': case 'Q':
 			freeBST(head);
 			break;
 		case 'i': case 'I':
+			if(flag == 0)
+			{
+				printf("Please Initialize BST!\n");
+				break;
+			}
 			printf("Your Key = ");
 			scanf("%d", &key);
 			insert(head, key);
@@ -74,13 +80,28 @@ int main()
 			break;
 
 		case 'r': case 'R':
+			if(flag == 0)
+			{
+				printf("Please Initialize BST!\n");
+				break;
+			}
 			recursiveInorder(head->left);
 			break;
 		case 't': case 'T':
+			if(flag == 0)
+			{
+				printf("Please Initialize BST!\n");
+				break;
+			}
 			iterativeInorder(head->left);
 			break;
 
 		case 'l': case 'L':
+			if(flag == 0)
+			{
+				printf("Please Initialize BST!\n");
+				break;
+			}
 			levelOrder(head->left);
 			break;
 
@@ -146,7 +167,7 @@ void iterativeInorder(Node* node) // iterative 방식으로 중위 순회
 	}
 }
 
-void levelOrder(Node* ptr)	// level 순회
+void levelOrder(Node* ptr)	// level order 순회
 {
 
 	if(!ptr) return;	// ptr이 NULL을 가리키면 종료
