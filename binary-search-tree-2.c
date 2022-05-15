@@ -1,17 +1,5 @@
-/*
- * Binary Search Tree #2
- *
- * Data Structures
- *
- * Department of Computer Science
- * at Chungbuk National University
- *
- */
-
 #include <stdio.h>
 #include <stdlib.h>
-
-
 
 typedef struct node {
 	int key;
@@ -49,10 +37,7 @@ int freeBST(Node* head); /* free all memories allocated to the tree */
 
 /* you may add your own defined functions if necessary */
 
-
 void printStack();
-
-
 
 int main()
 {
@@ -152,6 +137,19 @@ void recursiveInorder(Node* ptr)
  */
 void iterativeInorder(Node* node)
 {
+	for(;;)
+	{
+		for(; node; node = node->left)
+		{
+				push(node);
+		}
+		node = pop()
+
+		if(!node) break;
+		printf(" [%d] ", node->key);
+
+		node = node->right;
+	}
 }
 
 /**
@@ -159,6 +157,25 @@ void iterativeInorder(Node* node)
  */
 void levelOrder(Node* ptr)
 {
+	int front = rear = 0;
+	Node* queue[MAX_QUEUE_SIZE];
+
+	if(!ptr) return;
+	enQueue(ptr);
+
+	for(;;)
+	{
+		ptr=deQueue()
+		if(ptr)
+		{
+			printf(" [%d] ", ptr->key);
+			if(ptr->left)
+				enQueue(ptr->left)
+			if(ptr->right)
+				enQueue(ptr->right);
+		}
+		else break;
+	}
 }
 
 
@@ -208,6 +225,112 @@ int insert(Node* head, int key)
 
 int deleteNode(Node* head, int key)
 {
+	if(head == NULL)
+	{
+		printf("\n Nothing to delete!!\n");
+		return -1;
+	}
+
+	if(head->left == NULL)
+	{
+		printf("\n Nothing to delete!!\n");
+		return -1;
+	}
+
+	Node* root = head->left;
+
+	Node* parent = NULL;
+	Node* ptr = root;
+
+	while((ptr != NULL) && (ptr->key != key))
+	{
+		if(ptr->key != key)
+		{
+			parent = ptr;
+
+			if(ptr->key > key)
+			{
+				ptr = ptr->left;
+			}
+			else
+			{
+				ptr = ptr->right;
+			}
+		}
+	}
+
+	if(ptr == NULL)
+	{
+		printf("No node for key [%d]\n", key);
+		return -1;
+	}
+
+	if(ptr->left == NULL && ptr->right == NULL)
+	{
+		if(parent != NULL)
+		{
+			if(parent->left == ptr)
+			{
+				parent->left = NULL;
+			}
+			else
+			{
+				parent->right = NULL;
+			}
+		}
+		else
+		{
+			head->left = NULL;
+		}
+
+		free(ptr);
+		return 1;
+	}
+
+	if((ptr->left == NULL || ptr->right == NULL))
+	{
+		Node* child;
+		if(ptr->left != NULL)
+			child = ptr->left;
+		else
+			child = ptr->right;
+		
+		if(parent != NULL)
+		{
+			if(parent->left == ptr)
+				parent->left = child;
+			else
+				parent->right = child;
+		}
+		else
+		{
+			root = child;
+		}
+
+		free(ptr)
+		return 1;
+	}
+
+	Node* candidate;
+	parent =ptr;
+
+	candidate = ptr->right;
+
+	while(candidate->left != NULL)
+	{
+		parent = candidate;
+		candidate = candidate->left;
+	}
+
+	if(parent->right == candidate)
+		parent->right = candidate->right;
+	else
+		parent->left = candidate->right;
+
+	ptr->key = candidate->key;
+
+	free(candidate);
+	return 1;
 }
 
 
@@ -241,23 +364,46 @@ int freeBST(Node* head)
 
 Node* pop()
 {
+	if(top<0)
+		return NULL;
+	
+	return stack[top--];
 }
 
 void push(Node* aNode)
 {
+	stack[++top] = aNode;
 }
 
+void printStack()
+{
+	int i = 0;
+	printf("--- stack ---\n");
+	while(i <= top)
+	{
+		printf("stack[%d] = %d\n", i, stack[i]->key);
+	}
+}
 
 
 Node* deQueue()
 {
+	if(front == rear)
+	{
+		return NULL:
+	}
+
+	front = (front + 1) % MAX_QUEUE_SIZE;
+	return queue[front];
 }
 
 void enQueue(Node* aNode)
 {
+	rear = (rear + 1) % MAX_QUEUE_SIZE;
+	if(front == rear)
+	{
+		return;
+	}
+
+	queue[rear] = aNode;
 }
-
-
-
-
-
